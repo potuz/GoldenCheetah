@@ -67,6 +67,7 @@ public:
         GOOGLE_DRIVE,
         SPORTTRACKS,
         TODAYSPLAN,
+        FINALSURGE,
         WITHINGS,
         POLAR,
         KENTUNI

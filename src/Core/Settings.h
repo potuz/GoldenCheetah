@@ -41,6 +41,9 @@
 //Today's Plan
 #define GC_TODAYSPLAN_CLIENT_ID    "GoldenCheetah" // app id
 
+//Final Surge
+#define GC_FINALSURGE_CLIENT_ID    "4C2C55F5-4C0D-47AB-BDA7-A7A974BCE9DA"
+
 //Cycling Analytics / see also Athlete parameter
 #define GC_CYCLINGANALYTICS_CLIENT_ID    "1504958" // app id
 
@@ -328,6 +331,10 @@
 #define GC_TODAYSPLAN_USERKEY           "<athlete-private>todaysplan_userkey"
 #define GC_TODAYSPLAN_ATHLETE_ID        "<athlete-private>todaysplan_athlete_id"
 #define GC_TODAYSPLAN_ATHLETE_NAME      "<athlete-private>todaysplan_athlete_name"
+
+//Final Surge
+#define GC_FINALSURGE_TOKEN             "<athlete-private>finalsurge_token"
+
 
 //SixCycle
 #define GC_SIXCYCLE_USER                "<athlete-private>sixcycle_user"

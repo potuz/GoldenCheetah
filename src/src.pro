@@ -665,6 +665,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
         HEADERS += Cloud/SportTracks.h
         SOURCES += Cloud/TodaysPlan.cpp
         HEADERS += Cloud/TodaysPlan.h
+	SOURCES += Cloud/FinalSurge.cpp
+	HEADERS += Cloud/FinalSurge.h
     }
 
     SOURCES += Train/MonarkController.cpp Train/MonarkConnection.cpp
