@@ -49,6 +49,7 @@ OAuthDialog::OAuthDialog(Context *context, OAuthSite site, CloudService *service
         if (service->id() == "Google Drive") site = this->site = GOOGLE_DRIVE;
         if (service->id() == "University of Kent") site = this->site = KENTUNI;
         if (service->id() == "Today's Plan") site = this->site = TODAYSPLAN;
+        if (service->id() == "Final Surge") site = this->site = FINALSURGE;
         if (service->id() == "Withings") site = this->site = WITHINGS;
         if (service->id() == "PolarFlow") site = this->site = POLAR;
         if (service->id() == "SportTracks.mobi") site = this->site = SPORTTRACKS;
@@ -160,6 +161,12 @@ OAuthDialog::OAuthDialog(Context *context, OAuthSite site, CloudService *service
         urlstr = QString("%1/authorize/").arg(baseURL);
         urlstr.append(GC_TODAYSPLAN_CLIENT_ID);
 
+    } else if (site == FINALSURGE) {
+
+        urlstr = QString("https://log.finalsurge.com/oauth/authorize?");
+        urlstr.append("client_id=").append(GC_FINALSURGE_CLIENT_ID).append("&");
+        urlstr.append("redirect_uri=http://www.goldencheetah.org/");
+
     } else if (site == POLAR) {
 
         // OAUTH 2.0 - Google flow for installed applications
@@ -208,7 +215,7 @@ OAuthDialog::OAuthDialog(Context *context, OAuthSite site, CloudService *service
     //
     // STEP 1: LOGIN AND AUTHORISE THE APPLICATION
     //
-    if (site == DROPBOX || site == STRAVA || site == CYCLING_ANALYTICS || site == POLAR || site == SPORTTRACKS || site == GOOGLE_DRIVE || site == KENTUNI || site == TODAYSPLAN) {
+    if (site == DROPBOX || site == STRAVA || site == CYCLING_ANALYTICS || site == POLAR || site == SPORTTRACKS || site == GOOGLE_DRIVE || site == KENTUNI || site == TODAYSPLAN || site == FINALSURGE) {
 
         url = QUrl(urlstr);
         view->setUrl(url);
@@ -346,7 +353,7 @@ OAuthDialog::urlChanged(const QUrl &url)
     QString authheader;
 
     // sites that use this scheme
-    if (site == DROPBOX || site == STRAVA || site == CYCLING_ANALYTICS || site == TODAYSPLAN || site == POLAR || site == SPORTTRACKS) {
+    if (site == DROPBOX || site == STRAVA || site == CYCLING_ANALYTICS || site == TODAYSPLAN || site == FINALSURGE || site == POLAR || site == SPORTTRACKS) {
 
         if (url.toString().startsWith("http://www.goldencheetah.org/?state=&code=") ||
                 url.toString().contains("blank.html?code=") ||
@@ -429,6 +436,16 @@ OAuthDialog::urlChanged(const QUrl &url)
                 params.addQueryItem("grant_type", "authorization_code");
                 params.addQueryItem("redirect_uri", "https://goldencheetah.github.io/blank.html");
 
+            } else if (site == FINALSURGE) {
+
+                urlstr = QString("https://log.finalsurge.com/oauth/token?");
+                params.addQueryItem("client_id", GC_FINALSURGE_CLIENT_ID);
+#ifdef GC_FINALSURGE_CLIENT_SECRET
+                if (clientsecret != "") //XXX get rid when pages.cpp goes
+                    params.addQueryItem("client_secret", clientsecret);
+                else
+                    params.addQueryItem("client_secret", GC_FINALSURGE_CLIENT_SECRET);
+#endif
             }
 
             // all services will need us to send the temporary code received
@@ -687,6 +704,11 @@ OAuthDialog::networkRequestFinished(QNetworkReply *reply)
             QString info = QString(tr("Today's Plan authorization was successful."));
             QMessageBox information(QMessageBox::Information, tr("Information"), info);
             information.exec();
+        } else if (site == FINALSURGE) {
+            service->setSetting(GC_FINALSURGE_TOKEN, access_token);
+            QString info = QString(tr("Final Surge authorization was successful."));
+            QMessageBox information(QMessageBox::Information, tr("Information"), info);
+            information.exec(); // Do we need to deal with the athlete id received?
         }
 
     } else {
